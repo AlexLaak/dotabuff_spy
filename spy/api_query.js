@@ -34,10 +34,26 @@ function apiQuery(url)
 function queryMatch(matchId)
 {
     const MATCH_URL = "https://api.opendota.com/api/matches/" + matchId;
+    console.log("api call queryMatch");
     return JSON.parse(apiQuery(MATCH_URL));
+}
+
+// queries matches that include my_account_id and target_account_id
+// @param my_account_id
+// @param target_account_id
+function queryPlayedMatches(my_account_id, target_account_id)
+{
+    const PLAYED_WITH_URL = "https://api.opendota.com/api/players/" +
+        my_account_id +
+        "/matches?included_account_id=" +
+        target_account_id;
+    console.log("api call queryPlayedMatches");
+    return JSON.parse(apiQuery(PLAYED_WITH_URL));
+
 }
 
 // exposed functions
 module.exports = {
-    queryMatch: queryMatch
+    queryMatch: queryMatch,
+    queryPlayedMatches: queryPlayedMatches
 };
