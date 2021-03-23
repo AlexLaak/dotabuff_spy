@@ -3,7 +3,8 @@ var querier = require('./api_query.js');
 const MY_ID = 16461605;
 const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
 
-function assert(condition, message) {
+function assert(condition, message)
+{
     if (!condition) {
         throw new Error(message || "Assertion failed");
     }
@@ -17,7 +18,8 @@ function getMatchPlayerIds(matchId)
     assert(JSON_OBJ.players.length == 10);
 
     var matchIdArr = [];
-    for (let index = 0; index < JSON_OBJ.players.length; index++) {
+    for (let index = 0; index < JSON_OBJ.players.length; index++)
+    {
         const player = JSON_OBJ.players[index];
         if (player.account_id != null)
             matchIdArr.push(player.account_id);
