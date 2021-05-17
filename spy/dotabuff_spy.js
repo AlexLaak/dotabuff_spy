@@ -112,6 +112,14 @@ function isVictorious(matchObj)
     return false;
 }
 
+// generates json object containing players score from that specific match
+// @param matchObj
+function generatePlayerScoreFromMatch(matchObj)
+{
+    var scoreObj = {"kills": matchObj.kills, "deaths": matchObj.deaths, "assists": matchObj.assists};
+    return scoreObj;
+}
+
 // generates the matches array which contains the dotabuff links to matches and match results
 // @param matches_played all matches played with
 // @param match_id current match ID to exclude it from the list
@@ -123,7 +131,11 @@ function generateGames(matches_played, match_id)
     {
     	if (matches_played[index].match_id != match_id)
         {
-            var matchObj = {"match_link": generateDotabuffLink(matches_played[index]), "win": isVictorious(matches_played[index])};
+            var matchObj = {"match_link": generateDotabuffLink(matches_played[index]),
+                            "win": isVictorious(matches_played[index]),
+                            "kills": generatePlayerScoreFromMatch(matches_played[index]).kills,
+                            "deaths": generatePlayerScoreFromMatch(matches_played[index]).deaths,
+                            "assists": generatePlayerScoreFromMatch(matches_played[index]).assists};
             matchesArr.push(matchObj);
         }
     }
