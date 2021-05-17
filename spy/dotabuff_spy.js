@@ -1,6 +1,12 @@
 const MY_ID = 16461605;
 const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
 
+const HEROES = {
+    0: "Lion",
+    1: "Lich",
+    104: "Legion Commander"
+};
+
 // GET request
 // @param url
 // @param timeout (in seconds)
@@ -120,6 +126,14 @@ function generatePlayerScoreFromMatch(matchObj)
     return scoreObj;
 }
 
+// generates string from given hero id that maps to the hero name
+// @param matchObj
+function fetchPlayedHeroName(matchObj)
+{
+    const HERO_ID = matchObj.hero_id;
+    return HEROES[HERO_ID];
+}
+
 // generates the matches array which contains the dotabuff links to matches and match results
 // @param matches_played all matches played with
 // @param match_id current match ID to exclude it from the list
@@ -135,7 +149,8 @@ function generateGames(matches_played, match_id)
                             "win": isVictorious(matches_played[index]),
                             "kills": generatePlayerScoreFromMatch(matches_played[index]).kills,
                             "deaths": generatePlayerScoreFromMatch(matches_played[index]).deaths,
-                            "assists": generatePlayerScoreFromMatch(matches_played[index]).assists};
+                            "assists": generatePlayerScoreFromMatch(matches_played[index]).assists,
+                            "hero": fetchPlayedHeroName(matches_played[index])};
             matchesArr.push(matchObj);
         }
     }
