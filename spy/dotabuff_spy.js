@@ -90,23 +90,47 @@ function getMatchesPlayedWithId(account_id)
     return JSON_OBJ;
 }
 
-//?included_account_id=71373154&included_account_id=70852572
-
-// generates dotabuff links from json object that contains matches
-// @param matches_played (json object)
-// @param match_id (for excluding this match from the list)
-function generateDotabuffLinks(matches_played, match_id)
+// generates dotabuff link from given match json object
+// @param matchObj
+function generateDotabuffLink(matchObj)
 {
     const DOTABUFF_PREFIX = "https://www.dotabuff.com/matches/";
-    var linksArr = [];
+    return DOTABUFF_PREFIX + matchObj.match_id;
+}
+
+// checks if player won the match
+// @param matchObj
+function isVictorious(matchObj)
+{
+    const PLAYER_SLOT = matchObj.player_slot;
+    const RADIANT_WIN = matchObj.radiant_win;
+
+    if (PLAYER_SLOT < 10 && RADIANT_WIN)
+        return true;
+    if (PLAYER_SLOT > 100 && !RADIANT_WIN)
+        return true;
+    return false;
+}
+
+// generates the matches array which contains the dotabuff links to matches and match results
+// @param matches_played all matches played with
+// @param match_id current match ID to exclude it from the list
+function generateGames(matches_played, match_id)
+{
+    var matchesArr = [];
 
     for (let index = 0; index < matches_played.length; index++)
     {
     	if (matches_played[index].match_id != match_id)
-        	linksArr.push(DOTABUFF_PREFIX + matches_played[index].match_id);
+        {
+            var matchObj = {"match_link": generateDotabuffLink(matches_played[index]), "win": isVictorious(matches_played[index])};
+            matchesArr.push(matchObj);
+        }
     }
-    return linksArr;
+
+    return matchesArr;
 }
+
 
 // generates dotabuff links for all previously played games with players in @param match_id
 // @param match_id
@@ -126,9 +150,9 @@ function getMatchPreviouslyPlayedWith(match_id)
             const PREVIOUS_MATCHES = getMatchesPlayedWithId(PLAYER_ID);
             if (PREVIOUS_MATCHES != null)
             {
-                const DOTABUFF_LINKS_ARR = generateDotabuffLinks(PREVIOUS_MATCHES, match_id);
-                var playerObj = { "player_id": PLAYER_ID, "player_name": PLAYER_NAME, "matches": DOTABUFF_LINKS_ARR};
-                if (DOTABUFF_LINKS_ARR.length > 0)
+                const MATCHES_ARR = generateGames(PREVIOUS_MATCHES, match_id);
+                var playerObj = { "player_id": PLAYER_ID, "player_name": PLAYER_NAME, "matches": MATCHES_ARR};
+                if (MATCHES_ARR.length > 0)
                 	matched_players_match_links.push(playerObj);
             }
         }
