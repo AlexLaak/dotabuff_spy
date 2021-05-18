@@ -134,6 +134,16 @@ function fetchPlayedHeroName(matchObj)
     return HEROES[HERO_ID];
 }
 
+// generates an date object of the match date
+// @param matchObj
+function fetchMatchDate(matchObj)
+{
+    const TIME_EPOCH = matchObj.start_time;
+    var date = new Date(0);
+    date.setUTCSeconds(TIME_EPOCH);
+    return date;
+}
+
 // generates the matches array which contains the dotabuff links to matches and match results
 // @param matches_played all matches played with
 // @param match_id current match ID to exclude it from the list
@@ -150,7 +160,8 @@ function generateGames(matches_played, match_id)
                             "kills": generatePlayerScoreFromMatch(matches_played[index]).kills,
                             "deaths": generatePlayerScoreFromMatch(matches_played[index]).deaths,
                             "assists": generatePlayerScoreFromMatch(matches_played[index]).assists,
-                            "hero": fetchPlayedHeroName(matches_played[index])};
+                            "hero": fetchPlayedHeroName(matches_played[index]),
+                            "date": fetchMatchDate(matches_played[index])};
             matchesArr.push(matchObj);
         }
     }
