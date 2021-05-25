@@ -1,11 +1,8 @@
+var heroesObj;
+loadHeroesJson();
+
 const MY_ID = 16461605;
 const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
-
-const HEROES = {
-    0: "Lion",
-    1: "Lich",
-    104: "Legion Commander"
-};
 
 // GET request
 // @param url
@@ -21,6 +18,19 @@ function httpGETRequest(url, timeout)
         return xmlHttp.responseText;
     }
     return null;
+}
+
+// loads json file and loads it into obj
+function loadHeroesJson()
+{
+    var xhr = new XMLHttpRequest;
+    xhr.open("GET", chrome.runtime.getURL("heroes.json"));
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            heroesObj = JSON.parse(xhr.responseText);
+        }
+    };
+    xhr.send();
 }
 
 // queries openDOTA api
@@ -126,12 +136,14 @@ function generatePlayerScoreFromMatch(matchObj)
     return scoreObj;
 }
 
-// generates string from given hero id that maps to the hero name
+// generates string from given hero id that maps to the hero localized name
 // @param matchObj
 function fetchPlayedHeroName(matchObj)
 {
     const HERO_ID = matchObj.hero_id;
-    return HEROES[HERO_ID];
+    // TODO: get rid of this
+    const OFFSET = 2;
+    return heroesObj.heroes[HERO_ID-OFFSET].localized_name;
 }
 
 // generates an date object of the match date
