@@ -1,3 +1,5 @@
+var lastQueriedMatch;
+
 var heroesObj;
 loadHeroesJson();
 
@@ -192,6 +194,13 @@ function generateGames(matches_played, match_id)
 // @param match_id
 function getMatchPreviouslyPlayedWith(match_id)
 {
+    if (lastQueriedMatch == match_id)
+    {
+        assert(lastQueriedMatch != undefined);
+        // skip query to prevent fetching same page again
+        return "Already queried match: " + match_id;
+    }
+
 	const MATCH_PLAYERS = getMatchPlayers(match_id);
     const MATCH_PLAYER_IDS = MATCH_PLAYERS.ids;
     var matched_players_match_links = [];
@@ -213,6 +222,7 @@ function getMatchPreviouslyPlayedWith(match_id)
             }
         }
     }
+    lastQueriedMatch = match_id;
     return baseObj;
 }
 
