@@ -148,10 +148,9 @@ function fetchPlayedHeroName(matchObj)
     const HERO_OBJ = heroesObj.heroes[HERO_ID-OFFSET];
     if (HERO_OBJ)
     {
-        return HERO_OBJ.localized_name;
+        return HERO_OBJ.localized_name + " hero_id: " + HERO_ID;
     }
-    console.log("HEROOBJ: " + HERO_OBJ + ", HEROID: " + HERO_ID);
-    return "undefined";
+    return "unmapped hero" + " hero_id: " + HERO_ID;
 }
 
 // generates an date object of the match date
