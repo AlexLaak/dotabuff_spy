@@ -144,11 +144,14 @@ function fetchPlayedHeroName(matchObj)
 {
     const HERO_ID = matchObj.hero_id;
     // TODO: get rid of this
-    const OFFSET = 2;
-    const HERO_OBJ = heroesObj.heroes[HERO_ID-OFFSET];
-    if (HERO_OBJ)
+
+    for (let id = 0; id <= heroesObj.heroes.length; ++id)
     {
-        return HERO_OBJ.localized_name + " hero_id: " + HERO_ID;
+        const JSON_HERO_ID = heroesObj.heroes[id].id;
+        if (JSON_HERO_ID == HERO_ID)
+        {
+            return heroesObj.heroes[id].localized_name + " hero_id: " + HERO_ID;
+        }
     }
     return "unmapped hero" + " hero_id: " + HERO_ID;
 }
