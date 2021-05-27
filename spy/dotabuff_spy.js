@@ -1,15 +1,15 @@
+// GLOBALS
 var lastQueriedMatch;
-
 var heroesObj;
 loadHeroesJson();
 
+// TODO: make dynamically editable
 const MY_ID = 16461605;
 const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
 
 // GET request
 // @param url
-// @param timeout (in seconds)
-function httpGETRequest(url, timeout)
+function httpGETRequest(url)
 {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", url, false);
@@ -71,9 +71,13 @@ function queryPlayedMatches(my_account_id, target_account_id)
 
 }
 
+// assertion helper
+// @param condition
+// @param (optional) message
 function assert(condition, message)
 {
-    if (!condition) {
+    if (!condition)
+    {
         throw new Error(message || "Assertion failed");
     }
 }
@@ -143,7 +147,6 @@ function generatePlayerScoreFromMatch(matchObj)
 function fetchPlayedHeroName(matchObj)
 {
     const HERO_ID = matchObj.hero_id;
-    // TODO: get rid of this
 
     for (let id = 0; id <= heroesObj.heroes.length; ++id)
     {
@@ -228,13 +231,15 @@ function getMatchPreviouslyPlayedWith(match_id)
     return baseObj;
 }
 
-
+// parses the match id from given url
+// @param url
 function getMatchIdFromUrl(url)
 {
 	const URL_OBJ = new URL(url);
 	return URL_OBJ.pathname.split('/')[2];
 }
 
+// chrome extension magic
 chrome.webNavigation.onCompleted.addListener(tab => 
 {
 	chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
