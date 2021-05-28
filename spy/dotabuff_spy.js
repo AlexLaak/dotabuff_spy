@@ -148,7 +148,7 @@ function fetchPlayedHeroName(matchObj)
 {
     const HERO_ID = matchObj.hero_id;
 
-    for (let id = 0; id <= heroesObj.heroes.length; ++id)
+    for (let id = 0; id < heroesObj.heroes.length; ++id)
     {
         const JSON_HERO_ID = heroesObj.heroes[id].id;
         if (JSON_HERO_ID == HERO_ID)
