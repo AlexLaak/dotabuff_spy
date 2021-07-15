@@ -36,8 +36,7 @@ async function htmlAlter()
         if (playerIndex != undefined)
         {
             curInnerHTML += '<p class="losses">' + MATCHED_PLAYERS[playerIndex].losses +
-            '</p><p class="dash"> - </p><p class="losses"><p class="wins">'
-            + MATCHED_PLAYERS[playerIndex].wins + '</p>';
+            '</p><p class="dash"> - </p><p class="wins">' + MATCHED_PLAYERS[playerIndex].wins + '</p>';
 
             x[i].innerHTML = curInnerHTML;
         }
