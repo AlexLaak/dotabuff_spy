@@ -2,3 +2,20 @@
     background: url('https://i.pinimg.com/originals/81/32/96/813296022908d0d4adaa55a4eaf5207a.gif') !important;
 }
 */
+
+.wins {
+    /*text-align: right;*/
+    float: right;
+    color:lawngreen;
+}
+
+.dash {
+    /*text-align: right;*/
+    float: right;
+}
+
+.losses {
+    /*text-align: right;*/
+    float: right;
+    color:red;
+}

@@ -3,6 +3,7 @@
 const PLAYERS = 10;
 
 var waiting = true;
+const WAITING_PERIOD = 500; //ms
 var messageContent = undefined;
 
 function sleep(ms) {
@@ -15,7 +16,7 @@ async function htmlAlter()
 
     while (waiting)
     {
-        await sleep(500);
+        await sleep(WAITING_PERIOD);
     }
 
     const MATCHED_PLAYERS = parseMsg(messageContent);
@@ -34,9 +35,10 @@ async function htmlAlter()
 
         if (playerIndex != undefined)
         {
-            curInnerHTML += '<p style="text-align:right;color:lawngreen">' + MATCHED_PLAYERS[playerIndex].wins +
-                ' </p><p style="text-align:right;"> - </p><p style="text-align:right;color:red">'
-                + MATCHED_PLAYERS[playerIndex].losses + '</p>';
+            curInnerHTML += '<p class="losses">' + MATCHED_PLAYERS[playerIndex].losses +
+            '</p><p class="dash"> - </p><p class="losses"><p class="wins">'
+            + MATCHED_PLAYERS[playerIndex].wins + '</p>';
+
             x[i].innerHTML = curInnerHTML;
         }
     }
@@ -49,13 +51,17 @@ function parseMsg(msg)
 
 function findPlayerIndex(json, name)
 {
-    for (let i = 0; i < json.length; i++)
+    if (json != undefined)
     {
-        if (json[i].player_name == name)
+        for (let i = 0; i < json.length; i++)
         {
-            return i;
+            if (json[i].player_name == name)
+            {
+                return i;
+            }
         }
     }
+
     return undefined;
 }
 
