@@ -5,6 +5,11 @@
     "background": {
         "scripts": ["./dotabuff_spy.js"]
     },
+    "content_scripts": [{
+        "css": ["styles.css"],
+        "js": ["content.js"],
+        "matches": ["https://www.dotabuff.com/matches/*"]
+    }],
     //"options_page": ".options.html",
     //"browser_action": {
         //"default_popup": "popup.html"
