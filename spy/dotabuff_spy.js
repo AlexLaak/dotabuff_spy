@@ -194,6 +194,27 @@ function generateGames(matches_played, match_id)
     return matchesArr;
 }
 
+// generates score (win/loss) from given matches
+// @param matches json object
+function generateScoreFromMatches(matches)
+{
+    var wins = 0, losses = 0;
+    for (let i = 0; i < matches.length; i++)
+    {
+        const match = matches[i];
+        if (match.win == true)
+        {
+            wins++;
+        }
+        else
+        {
+            losses++;
+        }
+    }
+
+    var scoreObj = {"wins": wins, "losses": losses};
+    return scoreObj;
+}
 
 // generates dotabuff links for all previously played games with players in @param match_id
 // @param match_id
@@ -221,7 +242,12 @@ function getMatchPreviouslyPlayedWith(match_id)
             if (PREVIOUS_MATCHES != null)
             {
                 const MATCHES_ARR = generateGames(PREVIOUS_MATCHES, match_id);
-                var playerObj = { "player_id": PLAYER_ID, "player_name": PLAYER_NAME, "matches": MATCHES_ARR};
+                var SCORE = {"wins": 0, "losses": 0};
+                if (MATCHES_ARR != undefined)
+                {
+                    SCORE = generateScoreFromMatches(MATCHES_ARR);
+                }
+                var playerObj = { "player_id": PLAYER_ID, "player_name": PLAYER_NAME, "matches": MATCHES_ARR, "wins": SCORE.wins, "losses": SCORE.losses};
                 if (MATCHES_ARR.length > 0)
                 	matched_players_match_links.push(playerObj);
             }

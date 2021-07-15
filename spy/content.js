@@ -34,8 +34,9 @@ async function htmlAlter()
 
         if (playerIndex != undefined)
         {
-            console.log(playerIndex);
-            curInnerHTML += '<p style="text-align:right;">Matches found!</p>';
+            curInnerHTML += '<p style="text-align:right;color:lawngreen">' + MATCHED_PLAYERS[playerIndex].wins +
+                ' </p><p style="text-align:right;"> - </p><p style="text-align:right;color:red">'
+                + MATCHED_PLAYERS[playerIndex].losses + '</p>';
             x[i].innerHTML = curInnerHTML;
         }
     }
