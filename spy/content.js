@@ -12,6 +12,11 @@ function sleep(ms) {
 
 async function htmlAlter()
 {
+    var loadTextPlace = document.getElementsByClassName("match-victory-subtitle");
+    var loadText = document.createElement("P");
+    loadText.innerHTML = "Loading matched players...";
+    loadTextPlace[0].appendChild(loadText);
+
     var x = document.getElementsByClassName("tf-pl single-lines");
 
     while (waiting)
@@ -44,6 +49,7 @@ async function htmlAlter()
             x[i].innerHTML = curInnerHTML;
         }
     }
+    loadText.remove();
 }
 
 function parseMsg(msg)
