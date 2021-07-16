@@ -265,15 +265,15 @@ function getMatchIdFromUrl(url)
 	return URL_OBJ.pathname.split('/')[2];
 }
 
-// chrome extension magic
-chrome.extension.onConnect.addListener(function (port) {
-    console.log("Connected to front-end.....");
-    chrome.webNavigation.onCompleted.addListener(tab => {
-        chrome.tabs.query({ active: true, lastFocusedWindow: true }, tabs => {
-            let url = tabs[0].url;
-            if (/^https:\/\/www\.dotabuff\.com\/matches/.test(url)) {
-                port.postMessage(getMatchPreviouslyPlayedWith(getMatchIdFromUrl(url)));
-            }
-        });
+
+chrome.webNavigation.onCompleted.addListener(tab => {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true, currentWindow: true }, tabs => {
+        let url = tabs[0].url;
+        if (/^https:\/\/www\.dotabuff\.com\/matches/.test(url))
+        {
+            chrome.tabs.sendMessage(tabs[0].id, {data: getMatchPreviouslyPlayedWith(getMatchIdFromUrl(url))}, function(response) {
+                console.log(response.msg);
+            });
+        }
     });
-})
+});

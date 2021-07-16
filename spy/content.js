@@ -1,9 +1,9 @@
 //debugger;
 
 const PLAYERS = 10;
+const WAITING_PERIOD = 500; //ms
 
 var waiting = true;
-const WAITING_PERIOD = 500; //ms
 var messageContent = undefined;
 
 function sleep(ms) {
@@ -60,18 +60,20 @@ function findPlayerIndex(json, name)
             }
         }
     }
-
     return undefined;
 }
 
-var port = chrome.extension.connect({
-    name: "F2BConnection"
-});
-port.postMessage("Connected to back-end");
-port.onMessage.addListener(function(msg) {
-    messageContent = msg;
-    waiting = false;
-});
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse)
+    {
+        if (request.data)
+        {
+            messageContent = request.data;
+            waiting = false;
+        }
+        sendResponse({ msg: "data was processed from back-end"});
+    }
+);
 
 htmlAlter();
 
