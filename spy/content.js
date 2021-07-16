@@ -35,6 +35,9 @@ async function htmlAlter()
 
         if (playerIndex != undefined)
         {
+            // placeholder for displaying data in content script
+            console.log(MATCHED_PLAYERS[playerIndex]);
+
             curInnerHTML += '<p class="losses">' + MATCHED_PLAYERS[playerIndex].losses +
             '</p><p class="dash"> - </p><p class="wins">' + MATCHED_PLAYERS[playerIndex].wins + '</p>';
 
