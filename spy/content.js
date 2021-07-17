@@ -25,6 +25,12 @@ async function htmlAlter()
         await sleep(WAITING_PERIOD);
     }
 
+    if (checkIfSameMatch(messageContent))
+    {
+        loadText.innerHTML = "Already queried this match!"
+        return;
+    }
+
     const MATCHED_PLAYERS = parseMsg(messageContent);
 
     for (let i = 0; i < PLAYERS; i++)
@@ -59,6 +65,15 @@ async function htmlAlter()
     {
         loadText.innerHTML = "Scan finished! No matched players found!"
     }
+}
+
+function checkIfSameMatch(msg)
+{
+    if (msg.same_match == true)
+    {
+        return true
+    }
+    return false;
 }
 
 function parsePlayerId(str)
@@ -96,7 +111,7 @@ chrome.runtime.onMessage.addListener(
             messageContent = request.data;
             waiting = false;
         }
-        sendResponse({ msg: "data was processed from back-end"});
+        sendResponse({ msg: "Front-end: data was received from back-end"});
     }
 );
 

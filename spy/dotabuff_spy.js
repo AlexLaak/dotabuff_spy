@@ -2,6 +2,7 @@
 var lastQueriedMatch;
 var heroesObj;
 loadHeroesJson();
+var totalApiCallTime=0;
 
 // TODO: make dynamically editable
 const MY_ID = 16461605;
@@ -11,12 +12,16 @@ const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
 // @param url
 function httpGETRequest(url)
 {
+    var startTime = Date.now();
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
 
     if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
     {
+        var timeTaken = Date.now() - startTime;
+        console.log("Elapsed time on API call: " + timeTaken + "ms");
+        totalApiCallTime += timeTaken;
         return xmlHttp.responseText;
     }
     return null;
@@ -224,7 +229,9 @@ function getMatchPreviouslyPlayedWith(match_id)
     {
         assert(lastQueriedMatch != undefined);
         // skip query to prevent fetching same page again
-        return "Already queried match: " + match_id;
+        console.log("Skipping requerying of same match " + match_id);
+        var sameMatchJson = {"same_match" : true};
+        return sameMatchJson;
     }
 
 	const MATCH_PLAYERS = getMatchPlayers(match_id);
@@ -274,6 +281,8 @@ chrome.webNavigation.onCompleted.addListener(tab => {
             chrome.tabs.sendMessage(tabs[0].id, {data: getMatchPreviouslyPlayedWith(getMatchIdFromUrl(url))}, function(response) {
                 console.log(response.msg);
             });
+            console.log("Total time taken for API calls " + totalApiCallTime + "ms");
+            totalApiCallTime = 0;
         }
     });
 });
