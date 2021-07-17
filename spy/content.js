@@ -36,8 +36,8 @@ async function htmlAlter()
             continue;
         }
 
-        var playerName = x[i].getElementsByTagName("A")[0].outerText;
-        var playerIndex = findPlayerIndex(MATCHED_PLAYERS, playerName);
+        var playerId = parsePlayerId(x[i].getElementsByTagName("A")[0].pathname);
+        var playerIndex = findPlayerIndex(MATCHED_PLAYERS, undefined, playerId);
 
         if (playerIndex != undefined)
         {
@@ -61,21 +61,28 @@ async function htmlAlter()
     }
 }
 
+function parsePlayerId(str)
+{                          // /players/XXXXXXX        
+    const SLICE_START = 9; //         ^
+    return str.slice(SLICE_START);
+}
+
 function parseMsg(msg)
 {
     return msg.matched_players;
 }
 
-function findPlayerIndex(json, name)
+function findPlayerIndex(json, name=undefined, playerid=undefined)
 {
-    if (json != undefined)
+    if ((name == null && playerid == null) || json == undefined)
     {
-        for (let i = 0; i < json.length; i++)
+        return undefined;
+    }
+    for (let i = 0; i < json.length; i++)
+    {
+        if (json[i].player_name == name || json[i].player_id == playerid)
         {
-            if (json[i].player_name == name)
-            {
-                return i;
-            }
+            return i;
         }
     }
     return undefined;
