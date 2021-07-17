@@ -12,9 +12,10 @@ function sleep(ms) {
 
 async function htmlAlter()
 {
+    var matchedPlayersFound = 0;
     var loadTextPlace = document.getElementsByClassName("match-victory-subtitle");
     var loadText = document.createElement("P");
-    loadText.innerHTML = "Loading matched players...";
+    loadText.innerHTML = "Scanning for matched players...";
     loadTextPlace[0].appendChild(loadText);
 
     var x = document.getElementsByClassName("tf-pl single-lines");
@@ -47,9 +48,17 @@ async function htmlAlter()
             '</p><p class="dash"> - </p><p class="wins">' + MATCHED_PLAYERS[playerIndex].wins + '</p>';
 
             x[i].innerHTML = curInnerHTML;
+            matchedPlayersFound++;
         }
     }
-    loadText.remove();
+    if (matchedPlayersFound > 0)
+    {
+        loadText.innerHTML = "Scan finished! Found " + matchedPlayersFound + " matched players!"
+    }
+    else
+    {
+        loadText.innerHTML = "Scan finished! No matched players found!"
+    }
 }
 
 function parseMsg(msg)
