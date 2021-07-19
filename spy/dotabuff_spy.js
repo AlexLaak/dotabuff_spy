@@ -3,6 +3,7 @@ var lastQueriedMatch;
 var heroesObj;
 loadHeroesJson();
 var totalApiCallTime=0;
+var lastQueriedData;
 
 // TODO: make dynamically editable
 const MY_ID = 16461605;
@@ -230,8 +231,8 @@ function getMatchPreviouslyPlayedWith(match_id)
         assert(lastQueriedMatch != undefined);
         // skip query to prevent fetching same page again
         console.log("Skipping requerying of same match " + match_id);
-        var sameMatchJson = {"same_match" : true};
-        return sameMatchJson;
+        
+        return lastQueriedData;
     }
 
 	const MATCH_PLAYERS = getMatchPlayers(match_id);
@@ -261,6 +262,7 @@ function getMatchPreviouslyPlayedWith(match_id)
         }
     }
     lastQueriedMatch = match_id;
+    lastQueriedData = baseObj;
     return baseObj;
 }
 
