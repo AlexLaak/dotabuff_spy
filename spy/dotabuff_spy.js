@@ -9,6 +9,17 @@ var lastQueriedData;
 const MY_ID = 16461605;
 const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
 
+// assertion helper
+// @param condition
+// @param (optional) message
+function assert(condition, message)
+{
+    if (!condition)
+    {
+        throw new Error(message || "Assertion failed");
+    }
+}
+
 // GET request
 // @param url
 function httpGETRequest(url)
@@ -34,7 +45,8 @@ function loadHeroesJson()
     var xhr = new XMLHttpRequest;
     xhr.open("GET", chrome.runtime.getURL("heroes.json"));
     xhr.onreadystatechange = function () {
-        if (this.readyState == 4) {
+        if (this.readyState == 4)
+        {
             heroesObj = JSON.parse(xhr.responseText);
         }
     };
@@ -74,18 +86,6 @@ function queryPlayedMatches(my_account_id, target_account_id)
         target_account_id;
     console.log("api call queryPlayedMatches");
     return JSON.parse(apiQuery(PLAYED_WITH_URL));
-
-}
-
-// assertion helper
-// @param condition
-// @param (optional) message
-function assert(condition, message)
-{
-    if (!condition)
-    {
-        throw new Error(message || "Assertion failed");
-    }
 }
 
 // fetches match players
@@ -270,10 +270,9 @@ function getMatchPreviouslyPlayedWith(match_id)
 // @param url
 function getMatchIdFromUrl(url)
 {
-	const URL_OBJ = new URL(url);
-	return URL_OBJ.pathname.split('/')[2];
+    const URL_OBJ = new URL(url);
+    return URL_OBJ.pathname.split('/')[2];
 }
-
 
 chrome.webNavigation.onCompleted.addListener(tab => {
     chrome.tabs.query({ active: true, lastFocusedWindow: true, currentWindow: true }, tabs => {
