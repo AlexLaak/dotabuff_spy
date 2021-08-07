@@ -576,6 +576,11 @@
            "localized_name": "Pangolier"
         },
         {
+            "name": "void spirit",
+            "id": 126,
+            "localized_name": "Void Spirit"
+        },
+        {
            "name": "snapfire",
            "id": 128,
            "localized_name": "Snapfire"
