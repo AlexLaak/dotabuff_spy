@@ -175,6 +175,15 @@ function fetchMatchDate(matchObj)
     return date;
 }
 
+// calculates days since given match
+// @param match Date obj
+function calculateDaysSinceMatch(matchDate)
+{
+    const oneDay = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    return Math.round(Math.abs((today - matchDate) / oneDay));
+}
+
 // generates the matches array which contains the dotabuff links to matches and match results
 // @param matches_played all matches played with
 // @param match_id current match ID to exclude it from the list
@@ -186,17 +195,18 @@ function generateGames(matches_played, match_id)
     {
     	if (matches_played[index].match_id != match_id)
         {
+            var matchDate = fetchMatchDate(matches_played[index]);
             var matchObj = {"match_link": generateDotabuffLink(matches_played[index]),
                             "win": isVictorious(matches_played[index]),
                             "kills": generatePlayerScoreFromMatch(matches_played[index]).kills,
                             "deaths": generatePlayerScoreFromMatch(matches_played[index]).deaths,
                             "assists": generatePlayerScoreFromMatch(matches_played[index]).assists,
                             "hero": fetchPlayedHeroName(matches_played[index]),
-                            "date": fetchMatchDate(matches_played[index])};
+                            "date": matchDate,
+                            "days_since_match": calculateDaysSinceMatch(matchDate) + " days"};
             matchesArr.push(matchObj);
         }
     }
-
     return matchesArr;
 }
 
