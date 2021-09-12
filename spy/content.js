@@ -27,6 +27,12 @@ async function htmlAlter()
 
     const MATCHED_PLAYERS = parseMsg(messageContent);
 
+    if (!MATCHED_PLAYERS)
+    {
+        loadText.innerHTML = "Unable to scan. Player ID is not set!"
+        return;
+    }
+
     for (let i = 0; i < PLAYERS; i++)
     {
         var curInnerHTML = x[i].innerHTML;
@@ -69,6 +75,10 @@ function parsePlayerId(str)
 
 function parseMsg(msg)
 {
+    if (msg == "ID not set")
+    {
+        return undefined;
+    }
     return msg.matched_players;
 }
 

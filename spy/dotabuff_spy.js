@@ -5,9 +5,15 @@ loadHeroesJson();
 var totalApiCallTime=0;
 var lastQueriedData;
 
-// TODO: make dynamically editable
-const MY_ID = 16461605;
-const WHITELISTED_IDS = [71373154, 70852572, 84181635, 86710513, 52771263];
+// Configuration
+var MY_ID;
+var WHITELISTED_IDS = [];
+getCookie("player_id", function(id) {
+    MY_ID = id;
+});
+getCookie("whitelisted_ids", function(ids) {
+    WHITELISTED_IDS = ids;
+});
 
 // assertion helper
 // @param condition
@@ -236,6 +242,10 @@ function generateScoreFromMatches(matches)
 // @param match_id
 function getMatchPreviouslyPlayedWith(match_id)
 {
+    if (!MY_ID)
+    {
+        return "ID not set";
+    }
     if (lastQueriedMatch == match_id)
     {
         assert(lastQueriedMatch != undefined);
@@ -284,6 +294,57 @@ function getMatchIdFromUrl(url)
     return URL_OBJ.pathname.split('/')[2];
 }
 
+// updates dotabuff spy configuration as is received from popup
+// @param msg which contains either player_id or whitelisted_ids array
+function updateConfiguration(data)
+{
+    if (data.player_id)
+    {
+        MY_ID = data.player_id;
+    }
+    else if (data.whitelisted_ids)
+    {
+        WHITELISTED_IDS = data.whitelisted_ids;
+    }
+}
+
+// syncs popup view data with current backend data
+function syncPopupWithBackend()
+{
+    var currentConfig = {"player_id": MY_ID, "whitelisted_ids": WHITELISTED_IDS};
+    return currentConfig;
+}
+
+// saves current values to chrome cookies with one year expiration
+function saveToCookies()
+{
+    const ONE_YEAR_IN_SEC = 31556926;
+    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "player_id", value: PLAYER_ID, expirationDate: (new Date().getTime() / 1000) + ONE_YEAR_IN_SEC });
+    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "whitelisted_ids", value: WHITELISTED_IDS, expirationDate: (new Date().getTime() / 1000) + ONE_YEAR_IN_SEC });
+}
+
+// fetches given cookie from chrome cookies
+// @param name cookie name
+// @param callback function
+function getCookie(name, callback)
+{
+    chrome.cookies.get({"url": "https://www.dotabuff.com/matches/*", "name": name}, function(cookie) {
+        if (callback && cookie)
+        {
+            callback(cookie.value);
+        }
+    });
+}
+
+// Listener for popup view
+chrome.extension.onConnect.addListener(function(port) {
+    port.postMessage(syncPopupWithBackend());
+    port.onMessage.addListener(function(msg) {
+        updateConfiguration(msg);
+    });
+})
+
+// Listener for content (front-end) view
 chrome.webNavigation.onCompleted.addListener(tab => {
     chrome.tabs.query({ active: true, lastFocusedWindow: true, currentWindow: true }, tabs => {
         let url = tabs[0].url;
