@@ -13,5 +13,5 @@
     "browser_action": {
         "default_popup": "popup.html"
     },
-    "permissions": ["tabs", "storage", "webNavigation", "https://www.dotabuff.com/matches/*"]
+    "permissions": ["tabs", "storage", "webNavigation", "cookies", "https://www.dotabuff.com/matches/*"]
   }
