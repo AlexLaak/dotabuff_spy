@@ -315,12 +315,12 @@ function syncPopupWithBackend()
     return currentConfig;
 }
 
-// saves current values to chrome cookies with one year expiration
+// saves current values to chrome cookies with three year expiration
 function saveToCookies()
 {
-    const ONE_YEAR_IN_SEC = 31556926;
-    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "player_id", value: PLAYER_ID, expirationDate: (new Date().getTime() / 1000) + ONE_YEAR_IN_SEC });
-    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "whitelisted_ids", value: WHITELISTED_IDS, expirationDate: (new Date().getTime() / 1000) + ONE_YEAR_IN_SEC });
+    const THREE_YEARS_IN_MS = 94670856000;
+    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "player_id", value: PLAYER_ID, expirationDate: (new Date().getTime() / 1000) + THREE_YEARS_IN_MS });
+    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "whitelisted_ids", value: WHITELISTED_IDS, expirationDate: (new Date().getTime() / 1000) + THREE_YEARS_IN_MS });
 }
 
 // fetches given cookie from chrome cookies
