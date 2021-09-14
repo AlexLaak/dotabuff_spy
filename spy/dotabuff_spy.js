@@ -8,12 +8,18 @@ var lastQueriedData;
 // Configuration
 var MY_ID;
 var WHITELISTED_IDS = [];
+var whitelisted_ids_lenght;
 getCookie("player_id", function(id) {
     MY_ID = id;
 });
-getCookie("whitelisted_ids", function(ids) {
-    WHITELISTED_IDS = ids;
+getCookie("whitelisted_ids_lenght", function(lenght) {
+    whitelisted_ids_lenght = parseInt(lenght);
 });
+for (let index = 0; index < whitelisted_ids_lenght; index++) {
+    getCookie("whitelisted_id"+index.toString(), function(id) {
+        WHITELISTED_IDS.push(id);
+    });
+}
 
 // assertion helper
 // @param condition
@@ -306,6 +312,7 @@ function updateConfiguration(data)
     {
         WHITELISTED_IDS = data.whitelisted_ids;
     }
+    saveToCookies();
 }
 
 // syncs popup view data with current backend data
@@ -318,9 +325,14 @@ function syncPopupWithBackend()
 // saves current values to chrome cookies with three year expiration
 function saveToCookies()
 {
-    const THREE_YEARS_IN_MS = 94670856000;
-    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "player_id", value: PLAYER_ID, expirationDate: (new Date().getTime() / 1000) + THREE_YEARS_IN_MS });
-    chrome.cookies.set({ url: "https://www.dotabuff.com/matches/*", name: "whitelisted_ids", value: WHITELISTED_IDS, expirationDate: (new Date().getTime() / 1000) + THREE_YEARS_IN_MS });
+    const THREE_YEARS_IN_SEC = 94670777;
+    chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "player_id", "value": MY_ID, "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+
+    chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "whitelisted_ids_lenght", "value": WHITELISTED_IDS.length.toString(), "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+    for (let index = 0; index < WHITELISTED_IDS.length; index++) {
+        const WHITELISTED_ID = WHITELISTED_IDS[index];
+        chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "whitelisted_id"+index.toString(), "value": WHITELISTED_ID.toString(), "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+    }
 }
 
 // fetches given cookie from chrome cookies
