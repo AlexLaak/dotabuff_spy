@@ -4,22 +4,24 @@ var heroesObj;
 loadHeroesJson();
 var totalApiCallTime=0;
 var lastQueriedData;
+const DOTABUFF_MATCH_LINK = "https://www.dotabuff.com/matches/";
 
 // Configuration
 var MY_ID;
 var WHITELISTED_IDS = [];
-var whitelisted_ids_lenght;
+var whitelisted_ids_length;
 getCookie("player_id", function(id) {
     MY_ID = id;
 });
-getCookie("whitelisted_ids_lenght", function(lenght) {
-    whitelisted_ids_lenght = parseInt(lenght);
+getCookie("whitelisted_ids_length", function(length) {
+    whitelisted_ids_length = parseInt(length);
+    console.log(whitelisted_ids_length)
+    for (let index = 0; index < whitelisted_ids_length; index++) {
+        getCookie("whitelisted_id"+index.toString(), function(id) {
+            WHITELISTED_IDS.push(parseInt(id));
+        });
+    }
 });
-for (let index = 0; index < whitelisted_ids_lenght; index++) {
-    getCookie("whitelisted_id"+index.toString(), function(id) {
-        WHITELISTED_IDS.push(id);
-    });
-}
 
 // assertion helper
 // @param condition
@@ -134,7 +136,7 @@ function getMatchesPlayedWithId(account_id)
 // @param matchObj
 function generateDotabuffLink(matchObj)
 {
-    const DOTABUFF_PREFIX = "https://www.dotabuff.com/matches/";
+    const DOTABUFF_PREFIX = DOTABUFF_MATCH_LINK;
     return DOTABUFF_PREFIX + matchObj.match_id;
 }
 
@@ -326,12 +328,23 @@ function syncPopupWithBackend()
 function saveToCookies()
 {
     const THREE_YEARS_IN_SEC = 94670777;
-    chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "player_id", "value": MY_ID, "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
-
-    chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "whitelisted_ids_lenght", "value": WHITELISTED_IDS.length.toString(), "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+    chrome.cookies.set({
+        "url": DOTABUFF_MATCH_LINK+'*',
+        "name": "player_id",
+        "value": MY_ID,
+        "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+    chrome.cookies.set({
+        "url": DOTABUFF_MATCH_LINK+'*',
+        "name": "whitelisted_ids_length",
+        "value": WHITELISTED_IDS.length.toString(),
+        "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC)});
     for (let index = 0; index < WHITELISTED_IDS.length; index++) {
         const WHITELISTED_ID = WHITELISTED_IDS[index];
-        chrome.cookies.set({ "url": "https://www.dotabuff.com/matches/*", "name": "whitelisted_id"+index.toString(), "value": WHITELISTED_ID.toString(), "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
+        chrome.cookies.set({
+            "url": DOTABUFF_MATCH_LINK+'*',
+            "name": "whitelisted_id"+index.toString(),
+            "value": WHITELISTED_ID.toString(),
+            "expirationDate": ((new Date().getTime() / 1000) + THREE_YEARS_IN_SEC) });
     }
 }
 
@@ -340,7 +353,7 @@ function saveToCookies()
 // @param callback function
 function getCookie(name, callback)
 {
-    chrome.cookies.get({"url": "https://www.dotabuff.com/matches/*", "name": name}, function(cookie) {
+    chrome.cookies.get({"url": DOTABUFF_MATCH_LINK+'*', "name": name}, function(cookie) {
         if (callback && cookie)
         {
             callback(cookie.value);
